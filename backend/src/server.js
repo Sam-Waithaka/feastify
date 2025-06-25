@@ -4,10 +4,19 @@ import {favoritesTable} from './db/schema.js'
 import {db} from './config/db.js'
 import { and, eq } from 'drizzle-orm'
 
+import job from './config/cron.js'
+
 const app = express()
 const PORT = ENV.PORT || 8001
 
+
+if (ENV.NODE_ENV === 'production') job.start()
+
 app.use(express.json())
+
+app.get('/api/health', (req, res)=>{
+    res.status(200).json({message: "success"})
+})
 
 app.get('/api/favorites/:userId', async (req, res)=>{
     try {
